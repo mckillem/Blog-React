@@ -1,40 +1,36 @@
 import "./Contact.css";
 import {useState} from "react";
+import emailjs from '@emailjs/browser';
+
 export const Contact = () => {
 	const [email, setEmail] = useState("");
 	const [message, setMessage] = useState("");
-
-	//	todo: pokus. Změnit název funkce
-	//  obsah emailu, který se odešle na zadaný email (implementovat)
-	const emailToSend = (email, message) => {
-	  return (
-		  <>
-		  	<h1>Obsah emailu:</h1><br/>
-			  {message}<br/>
-			  <h2>Z emailu</h2><br/>
-			  {email}
-		  </>
-	  )
-	}
+	const [name, setName] = useState("");
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
 
-		emailToSend(email, message);
-		// console.log(email)
-		// console.log(message)
-		console.log(emailToSend().props)
+		emailjs.sendForm('service_1fknu2q', 'template_bimdgaa', event.target, 'vuXiO2Tx7NHucS56d')
+			.then((result) => {
+				console.log(result.text);
+				// window.location.reload()
+			}, (error) => {
+				console.log(error.text);
+			});
 
 		setEmail("");
 		setMessage("");
+		setName("");
 	}
 	return (
 		<>
 			<form onSubmit={handleSubmit}>
+				<label htmlFor="name">Tvoje jméno</label><br/>
+				<input type="text" id="name" name="from_name" value={name} onChange={(e) => setName(e.target.value)}/><br/>
 				<label htmlFor="email">Tvůj email</label><br/>
-				<input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)}/><br/>
+				<input type="email" id="email" name="from_email" value={email} onChange={(e) => setEmail(e.target.value)}/><br/>
 				<label htmlFor="message">Tvůj vzkaz</label><br/>
-				<textarea name="" id="message" value={message} onChange={(e) => setMessage(e.target.value)}></textarea><br/>
+				<textarea name="message" id="message" value={message} onChange={(e) => setMessage(e.target.value)}></textarea><br/>
 				<input type="submit" value="Odeslat"/>
 			</form>
 		</>
